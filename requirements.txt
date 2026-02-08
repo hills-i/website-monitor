@@ -1,0 +1,6 @@
+requests>=2.31.0
+openai>=2.17.0
+markdownify>=1.2.2
+trafilatura>=2.0.0
+beautifulsoup4>=4.12.0
+lxml>=5.0.0

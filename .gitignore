@@ -1,0 +1,68 @@
+# Configuration files with secrets
+config.json
+**/config.json
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+**/venv/
+**/env/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# website url list files
+website.txt
+
+# Output directories and reports
+output/
+**/output/
+reports/
+**/reports/
+
+# Test files that may contain real data
+test_single_site.txt
+**/test_single_site.txt
+
+# IDE specific files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
+
+# OS specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+**/logs/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+*~
+
+# testing files
+test*
