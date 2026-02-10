@@ -572,24 +572,11 @@ def summarize_changes(site_change, api_key, config):
         else:
             formatted_diff = '\n'.join(diff_lines)
 
-        prompt = f"""# Role
-You are a web content analyst specializing in detecting meaningful changes between website versions.
-
-# Task
-Analyze the provided Markdown diff and summarize user-visible changes in Japanese.
-
-# Guidelines
-- **Focus on:** Text content changes, new/removed sections, structural changes (headings, lists, tables)
-- **Ignore:** Minor formatting differences, whitespace changes
-- **Output format:** Bulleted list in Japanese, categorized as "追加", "変更", "削除" if needed
-
-# Input
-Below is a diff comparing cleaned Markdown content (`-` = removed, `+` = added):
-
-```diff
-{formatted_diff}
-```
-"""
+        # Load prompt template from file
+        prompt_file = Path(__file__).parent / 'prompt.txt'
+        with open(prompt_file, 'r', encoding='utf-8') as f:
+            prompt_template = f.read()
+        prompt = prompt_template.format(formatted_diff=formatted_diff)
 
         # Initialize OpenAI client
         client = OpenAI(
@@ -779,7 +766,7 @@ def main():
         sys.exit(1)
 
     urls = website_list_path.read_text(encoding='utf-8').strip().split('\n')
-    urls = [url.strip() for url in urls if url.strip()]  # Remove empty lines
+    urls = [url.strip() for url in urls if url.strip() and not url.strip().startswith('#')]  # Remove empty lines and comments
 
     # Main processing loop
     changed_sites = []

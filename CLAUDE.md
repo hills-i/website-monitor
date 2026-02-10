@@ -4,11 +4,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Website Monitor is a Python-based website monitoring tool that automatically detects changes on websites and generates AI-powered summaries in Japanese. Designed for cross-platform use (Windows/Linux/macOS).
+Website Monitor is a Python-based website monitoring tool that automatically detects changes on websites and generates AI-powered summaries. Designed for cross-platform use (Windows/Linux/macOS).
 
 **Key Features:**
 - HTML→Markdown normalization using markdownify for cleaner diffs
-- AI-powered change summaries in Japanese
+- AI-powered change summaries
 - Cross-platform compatibility
 - Interactive HTML reports
 
@@ -40,7 +40,7 @@ python3 test_website_monitor.py
 6. **Markdown Cleanup** (`clean_markdown_for_diff`): Removes structural noise (CSS classes, empty tags, HTML attributes)
 7. **Storage**: Saves cleaned Markdown to `output/YYYY-MM-DD/hostname.md`
 8. **Comparison** (`compare_site_content`): Diffs cleaned Markdown against previous crawl
-9. **AI Summarization** (`summarize_changes`): Sends diffs to OpenAI API for Japanese summaries
+9. **AI Summarization** (`summarize_changes`): Sends diffs to OpenAI API for summaries
 10. **Report Generation** (`generate_report`): Creates HTML report with visual diffs
 
 **Key Features:**
@@ -78,7 +78,7 @@ All configuration variables are initialized in the "Configuration with Defaults"
 
 **Cross-Platform Compatibility**
 - Uses `System.Net.WebUtility::HtmlEncode` (not `System.Web.HttpUtility`)
-- UTF-8 encoding enforced throughout for Japanese text support
+- UTF-8 encoding
 - No Windows-specific dependencies
 
 ### Function Responsibilities
@@ -132,10 +132,11 @@ All configuration variables are initialized in the "Configuration with Defaults"
 - Returns None if no previous file exists
 
 **`summarize_changes(site_change, api_key, config) -> str`**
+- Loads prompt template from `prompt.txt` file
 - Truncates diff if exceeds `max_diff_lines`
+- Substitutes diff into prompt template using `{formatted_diff}` placeholder
 - Calls OpenAI API using official `openai` library
 - Implements retry logic with exponential backoff
-- Prompts for Japanese summaries of user-visible changes
 
 **`generate_report(changed_sites, report_path) -> None`**
 - Creates interactive HTML with collapsible diff sections
@@ -216,8 +217,14 @@ All settings in `config.json` are optional (defaults apply):
 | `Markdown_Cleanup_Enabled` | `true` | Enable Markdown cleanup before diff |
 | `Markdown_Cleanup_Patterns` | [see config.example.json] | Regex patterns for structural noise removal |
 
-## Output Files
+## Key Files
 
+**Configuration & Templates:**
+- `website.txt`: List of URLs to monitor (one per line)
+- `config.json`: API key and settings (gitignored, use config.example.json as template)
+- `prompt.txt`: AI summarization prompt template (customizable, must contain `{formatted_diff}` placeholder)
+
+**Output Files:**
 - `output/YYYY-MM-DD/hostname.html`: Redacted and filtered HTML snapshots (main content only)
 - `output/YYYY-MM-DD/hostname.md`: Cleaned Markdown (structural noise removed, ready for comparison)
 - `reports/report-YYYY-MM-DD.html`: Daily change report with AI summaries (file path displayed after generation)
